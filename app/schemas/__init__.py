@@ -5,6 +5,7 @@ from app.schemas.organization import (
     OrganizationListItem,
 )
 from app.schemas.risk_prediction import OrganizationRiskResponse, RiskPredictionItem
+from app.schemas.feature_snapshot import RiskFeatureSnapshotCreate, RiskFeatureSnapshotItem
 
 __all__ = [
     "DashboardSummary",
@@ -14,4 +15,6 @@ __all__ = [
     "OrganizationRiskResponse",
     "RiskLevelCount",
     "RiskPredictionItem",
+    "RiskFeatureSnapshotCreate",
+    "RiskFeatureSnapshotItem",
 ]
