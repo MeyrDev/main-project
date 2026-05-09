@@ -22,8 +22,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
     container_name: risk_crm_app
+    restart: unless-stopped
     env_file:
       - .env
     depends_on:
@@ -31,7 +31,9 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
-    command: ["sh", "-c", "python -m app.main && tail -f /dev/null"]
+    ports:
+    - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
   risk_crm_pg_data:

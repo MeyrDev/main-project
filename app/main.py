@@ -1,10 +1,19 @@
-from app.db.session import engine
+from fastapi import FastAPI
+
+from app.api import api_router
+
+app = FastAPI(
+    title="Risk CRM API",
+    description="CRM-система прогнозирования рисков хозяйствующих субъектов",
+    version="0.1.0",
+)
+
+app.include_router(api_router)
 
 
-def main() -> None:
-    print("risk-crm app container is ready")
-    print(f"SQLAlchemy engine: {engine.url.render_as_string(hide_password=True)}")
-
-
-if __name__ == "__main__":
-    main()
+@app.get("/health", tags=["Health"])
+def health_check():
+    return {
+        "status": "ok",
+        "service": "risk-crm-api",
+    }
