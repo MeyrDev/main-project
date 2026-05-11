@@ -1,3 +1,8 @@
+"""
+API для просмотра результатов прогнозирования риска.
+
+Возвращает сохранённые risk_predictions, рассчитанные ML-модулем.
+"""
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session

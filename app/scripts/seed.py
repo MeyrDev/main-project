@@ -1,5 +1,11 @@
-from datetime import date, datetime, timezone
-from decimal import Decimal
+"""
+Скрипт демонстрационного заполнения базы данных.
+
+Создаёт роли, пользователей, организации, контакты, сделки,
+источники данных, признаки риска, ML-модель и тестовые risk_predictions.
+Используется для локального запуска и демонстрации приложения.
+"""
+from datetime import datetime, timezone 
 
 from app.db.session import SessionLocal
 from app.models import (

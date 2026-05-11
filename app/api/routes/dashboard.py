@@ -1,3 +1,10 @@
+"""
+API для dashboard-аналитики.
+
+Возвращает агрегированные показатели:
+количество организаций, пользователей, сделок, прогнозов
+и распределение организаций по уровням риска.
+"""
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session

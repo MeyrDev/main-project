@@ -1,3 +1,9 @@
+"""
+Модель ML-модели.
+
+Хранит информацию о версии модели, алгоритме, пути к artifact-файлу,
+метриках качества и параметрах обучения.
+"""
 from datetime import datetime
 from uuid import UUID, uuid4
 

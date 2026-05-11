@@ -1,5 +1,9 @@
-from pydantic import BaseModel
+"""
+Pydantic-схемы для dashboard.
 
+Описывают формат сводной аналитики, которая возвращается на главную страницу системы.
+"""
+from pydantic import BaseModel
 
 class RiskLevelCount(BaseModel):
     risk_level: str

@@ -1,3 +1,9 @@
+"""
+Модель результата прогнозирования риска.
+
+Хранит рассчитанный risk_score, уровень риска, объяснение результата
+и рекомендации для пользователя CRM-системы.
+"""
 import enum
 from datetime import datetime
 from decimal import Decimal

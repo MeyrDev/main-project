@@ -1,5 +1,11 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+"""
+Конфигурация приложения.
 
+Здесь описываются настройки, которые читаются из переменных окружения:
+адрес подключения к базе данных, параметры окружения и другие системные настройки.
+"""
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://risk_user:risk_password@db:5432/risk_crm"

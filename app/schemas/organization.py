@@ -1,3 +1,9 @@
+"""
+Pydantic-схемы для организаций.
+
+Определяют формат входных данных при создании организации
+и формат ответа API при получении карточки организации.
+"""
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID

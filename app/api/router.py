@@ -1,3 +1,9 @@
+"""
+Главный маршрутизатор API.
+
+Подключает все группы endpoint'ов:
+организации, признаки риска, прогнозы, dashboard и ML-модуль.
+"""
 from fastapi import APIRouter
 
 from app.api.routes import (

@@ -1,3 +1,10 @@
+"""
+Точка входа FastAPI-приложения.
+
+Файл создаёт экземпляр приложения, подключает все API-маршруты
+и предоставляет health-check endpoint для проверки работоспособности backend.
+"""
+
 from fastapi import FastAPI
 
 from app.api import api_router

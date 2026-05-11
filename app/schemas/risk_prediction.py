@@ -1,3 +1,9 @@
+"""
+Pydantic-схемы для результатов прогнозирования риска.
+
+Используются для возврата risk_score, risk_level, объяснения модели
+и рекомендаций пользователю.
+"""
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID

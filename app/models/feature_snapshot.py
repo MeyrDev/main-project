@@ -1,3 +1,10 @@
+"""
+Модель снимка признаков риска.
+
+RiskFeatureSnapshot хранит входные признаки для ML-модели на конкретную дату.
+Каждая запись показывает финансово-операционное состояние организации
+в определённый период и используется для расчёта risk_prediction.
+"""
 from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID, uuid4

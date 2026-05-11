@@ -1,3 +1,9 @@
+"""
+Модель хозяйствующего субъекта.
+
+Организация представляет компанию или экономический субъект,
+для которого система хранит CRM-данные и рассчитывает уровень риска.
+"""
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4

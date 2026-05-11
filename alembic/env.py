@@ -1,3 +1,9 @@
+"""
+Конфигурация Alembic.
+
+Файл подключает настройки базы данных, импортирует все ORM-модели
+и передаёт Base.metadata в Alembic для генерации и применения миграций.
+"""
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool

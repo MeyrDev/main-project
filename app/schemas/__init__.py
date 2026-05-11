@@ -1,3 +1,8 @@
+"""
+Импорт Pydantic-схем.
+
+Позволяет импортировать схемы из app.schemas единым способом.
+"""
 from app.schemas.dashboard import DashboardSummary, RiskLevelCount
 from app.schemas.organization import (
     OrganizationCreate,

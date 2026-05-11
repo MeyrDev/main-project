@@ -1,3 +1,9 @@
+"""
+Pydantic-схемы для признаков риска.
+
+Определяют формат JSON, который пользователь отправляет при добавлении
+финансово-операционных признаков организации.
+"""
 from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID
