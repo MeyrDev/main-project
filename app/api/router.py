@@ -12,6 +12,9 @@ from app.api.routes import (
     organizations_router,
     risk_predictions_router,
     feature_snapshots_router,
+    deals_router,
+    interactions_router,
+    reports_router
 )
 
 api_router = APIRouter(prefix="/api")
@@ -21,3 +24,6 @@ api_router.include_router(risk_predictions_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(ml_router)
 api_router.include_router(feature_snapshots_router)
+api_router.include_router(deals_router)
+api_router.include_router(interactions_router)
+api_router.include_router(reports_router)

@@ -17,6 +17,8 @@ from app.schemas import (
     OrganizationDetail,
     OrganizationListItem,
     OrganizationRiskResponse,
+    OrganizationRiskHistoryItem,
+    OrganizationUpdate
 )
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
@@ -100,3 +102,58 @@ def get_organization_risk(
         "organization_name": organization.name,
         "risk_prediction": prediction,
     }
+
+@router.get("/{organization_id}/risk-history", response_model=list[OrganizationRiskHistoryItem])
+def get_organization_risk_history(
+    organization_id: UUID,
+    db: Session = Depends(get_db),
+):
+    organization = db.get(Organization, organization_id)
+
+    if organization is None:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    stmt = (
+        select(RiskPrediction)
+        .where(RiskPrediction.organization_id == organization_id)
+        .order_by(RiskPrediction.predicted_at.desc())
+    )
+
+    return db.scalars(stmt).all()
+
+@router.patch("/{organization_id}", response_model=OrganizationDetail)
+def update_organization(
+    organization_id: UUID,
+    payload: OrganizationUpdate,
+    db: Session = Depends(get_db),
+):
+    organization = db.get(Organization, organization_id)
+
+    if organization is None:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    update_data = payload.model_dump(exclude_unset=True)
+
+    if not update_data:
+        return organization
+
+    new_bin = update_data.get("bin")
+
+    if new_bin and new_bin != organization.bin:
+        existing = db.scalar(
+            select(Organization).where(Organization.bin == new_bin)
+        )
+
+        if existing is not None:
+            raise HTTPException(
+                status_code=409,
+                detail="Organization with this BIN already exists",
+            )
+
+    for field_name, value in update_data.items():
+        setattr(organization, field_name, value)
+
+    db.commit()
+    db.refresh(organization)
+
+    return organization

@@ -21,9 +21,38 @@ from app.models import (
     RiskPrediction,
 )
 from app.schemas import RiskPredictionItem
+from app.ml.predictor import ARTIFACT_PATH, load_artifact, predict_risk
+from app.schemas import MLModelInfo, RiskPredictionItem
 
 router = APIRouter(prefix="/ml", tags=["ML"])
 
+@router.get("/model-info", response_model=MLModelInfo)
+def get_model_info():
+    """
+    Возвращает информацию об используемой ML-модели.
+
+    Endpoint нужен для демонстрации того, какая модель применяется
+    в системе прогнозирования риска, какие признаки она использует
+    и какие метрики качества были получены при обучении.
+    """
+
+    if not ARTIFACT_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="ML model artifact not found. Run: python -m app.ml.train_model",
+        )
+
+    artifact = load_artifact()
+
+    return MLModelInfo(
+        model_name=artifact["model_name"],
+        version=artifact["version"],
+        algorithm_name=artifact["algorithm_name"],
+        artifact_path=str(ARTIFACT_PATH),
+        feature_columns=artifact["feature_columns"],
+        metrics=artifact["metrics"],
+        status="ready",
+    )
 
 @router.post("/predict/{organization_id}", response_model=RiskPredictionItem)
 def predict_organization_risk(
