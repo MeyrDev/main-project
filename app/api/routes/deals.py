@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_db
 from app.models import Deal, Organization, User
 from app.schemas import DealCreate, DealItem, DealUpdate
+from app.services.audit import create_audit_log
 
 router = APIRouter(tags=["Deals"])
 
@@ -73,6 +74,22 @@ def create_organization_deal(
     )
 
     db.add(deal)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        action="deal.created",
+        entity_type="deal",
+        entity_id=deal.id,
+        user_id=deal.owner_id,
+        details={
+            "organization_id": str(organization_id),
+            "title": deal.title,
+            "stage": deal.stage.value,
+            "amount": str(deal.amount) if deal.amount is not None else None,
+        },
+    )
+
     db.commit()
     db.refresh(deal)
 
@@ -108,6 +125,17 @@ def update_deal(
 
     for field_name, value in update_data.items():
         setattr(deal, field_name, value)
+
+    create_audit_log(
+        db=db,
+        action="deal.updated",
+        entity_type="deal",
+        entity_id=deal.id,
+        user_id=deal.owner_id,
+        details={
+            "updated_fields": list(update_data.keys()),
+        },
+    )
 
     db.commit()
     db.refresh(deal)

@@ -24,6 +24,7 @@ from app.models import (
     User,
 )
 from app.schemas import ReportCreate, ReportData, ReportItem
+from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
@@ -81,6 +82,22 @@ def create_report(
     )
 
     db.add(report)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        action="report.created",
+        entity_type="report",
+        entity_id=report.id,
+        user_id=report.created_by_id,
+        details={
+            "title": report.title,
+            "report_type": report.report_type.value,
+            "organization_id": str(report.organization_id)
+            if report.organization_id is not None
+            else None,
+        },
+    )
     db.commit()
     db.refresh(report)
 

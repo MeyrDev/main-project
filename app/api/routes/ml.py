@@ -23,6 +23,7 @@ from app.models import (
 from app.schemas import RiskPredictionItem
 from app.ml.predictor import ARTIFACT_PATH, load_artifact, predict_risk
 from app.schemas import MLModelInfo, RiskPredictionItem
+from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/ml", tags=["ML"])
 
@@ -125,6 +126,20 @@ def predict_organization_risk(
     )
 
     db.add(prediction)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        action="risk_prediction.created",
+        entity_type="risk_prediction",
+        entity_id=prediction.id,
+        details={
+            "organization_id": str(organization.id),
+            "risk_score": str(risk_score),
+            "risk_level": risk_level.value,
+            "model": "gradient_boosting_risk_model",
+        },
+    )
     db.commit()
     db.refresh(prediction)
 

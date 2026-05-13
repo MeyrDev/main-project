@@ -11,7 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
-from app.models import Organization, RiskPrediction
+from app.models import Organization, RiskPrediction, organization
 from app.schemas import (
     OrganizationCreate,
     OrganizationDetail,
@@ -20,6 +20,7 @@ from app.schemas import (
     OrganizationRiskHistoryItem,
     OrganizationUpdate
 )
+from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
 
@@ -59,6 +60,21 @@ def create_organization(
     organization = Organization(**payload.model_dump())
 
     db.add(organization)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        action="organization.created",
+        entity_type="organization",
+        entity_id=organization.id,
+        details={
+            "name": organization.name,
+            "bin": organization.bin,
+            "industry": organization.industry,
+            "region": organization.region,
+        },
+    )
+    
     db.commit()
     db.refresh(organization)
 
@@ -152,6 +168,16 @@ def update_organization(
 
     for field_name, value in update_data.items():
         setattr(organization, field_name, value)
+
+    create_audit_log(
+        db=db,
+        action="organization.updated",
+        entity_type="organization",
+        entity_id=organization.id,
+        details={
+            "updated_fields": list(update_data.keys()),
+        },
+    )
 
     db.commit()
     db.refresh(organization)

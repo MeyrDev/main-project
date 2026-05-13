@@ -14,7 +14,8 @@ from app.api.routes import (
     feature_snapshots_router,
     deals_router,
     interactions_router,
-    reports_router
+    reports_router,
+    audit_logs_router
 )
 
 api_router = APIRouter(prefix="/api")
@@ -27,3 +28,4 @@ api_router.include_router(feature_snapshots_router)
 api_router.include_router(deals_router)
 api_router.include_router(interactions_router)
 api_router.include_router(reports_router)
+api_router.include_router(audit_logs_router)

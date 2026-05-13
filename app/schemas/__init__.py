@@ -20,6 +20,7 @@ from app.schemas.ml import MLModelInfo
 from app.schemas.deal import DealCreate, DealItem, DealUpdate
 from app.schemas.interaction import InteractionCreate, InteractionItem, InteractionUpdate
 from app.schemas.report import ReportCreate, ReportData, ReportItem
+from app.schemas.audit_log import AuditLogItem
 
 __all__ = [
     "DashboardSummary",
@@ -42,5 +43,6 @@ __all__ = [
     "InteractionItem",
     "ReportCreate",
     "ReportItem",
-    "ReportData"
+    "ReportData",
+    "AuditLogItem",
 ]

@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_db
 from app.models import Organization, RiskFeatureSnapshot
 from app.schemas import RiskFeatureSnapshotCreate, RiskFeatureSnapshotItem
+from app.services.audit import create_audit_log
 
 router = APIRouter(
     prefix="/organizations/{organization_id}/feature-snapshots",
@@ -68,6 +69,20 @@ def create_feature_snapshot(
     db.add(snapshot)
 
     try:
+        db.flush()
+
+        create_audit_log(
+            db=db,
+            action="feature_snapshot.created",
+            entity_type="risk_feature_snapshot",
+            entity_id=snapshot.id,
+            details={
+                "organization_id": str(organization_id),
+                "period_date": payload.period_date.isoformat(),
+                "revenue": str(payload.revenue) if payload.revenue is not None else None,
+                "debt_amount": str(payload.debt_amount) if payload.debt_amount is not None else None,
+            },
+        )
         db.commit()
     except IntegrityError:
         db.rollback()

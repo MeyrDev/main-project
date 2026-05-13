@@ -7,6 +7,7 @@ API для работы с взаимодействиями.
 
 from uuid import UUID
 
+from app import db
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -14,6 +15,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_db
 from app.models import Deal, Interaction, Organization, User
 from app.schemas import InteractionCreate, InteractionItem, InteractionUpdate
+from app.services.audit import create_audit_log
 
 router = APIRouter(tags=["Interactions"])
 
@@ -84,6 +86,21 @@ def create_organization_interaction(
     )
 
     db.add(interaction)
+    db.flush()
+
+    create_audit_log(
+        db=db,
+        action="interaction.created",
+        entity_type="interaction",
+        entity_id=interaction.id,
+        user_id=interaction.user_id,
+        details={
+            "organization_id": str(organization_id),
+            "deal_id": str(interaction.deal_id) if interaction.deal_id is not None else None,
+            "interaction_type": interaction.interaction_type.value,
+            "subject": interaction.subject,
+        },
+    )
     db.commit()
     db.refresh(interaction)
 
@@ -134,6 +151,16 @@ def update_interaction(
     for field_name, value in update_data.items():
         setattr(interaction, field_name, value)
 
+    create_audit_log(
+        db=db,
+        action="interaction.updated",
+        entity_type="interaction",
+        entity_id=interaction.id,
+        user_id=interaction.user_id,
+        details={
+            "updated_fields": list(update_data.keys()),
+        },
+    )
     db.commit()
     db.refresh(interaction)
 

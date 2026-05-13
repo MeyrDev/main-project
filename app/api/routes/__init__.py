@@ -11,6 +11,7 @@ from app.api.routes.feature_snapshots import router as feature_snapshots_router
 from app.api.routes.deals import router as deals_router
 from app.api.routes.interactions import router as interactions_router
 from app.api.routes.reports import router as reports_router
+from app.api.routes.audit_logs import router as audit_logs_router
 
 __all__ = [
     "dashboard_router",
@@ -21,4 +22,5 @@ __all__ = [
     "deals_router",
     "interactions_router",
     "reports_router",
+    "audit_logs_router",
 ]
