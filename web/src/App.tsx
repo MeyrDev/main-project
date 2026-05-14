@@ -1,12 +1,25 @@
 import { useState } from "react";
 import { DashboardPage } from "./pages/DashboardPage";
+import { OrganizationDetailPage } from "./pages/OrganizationDetailPage";
 import { OrganizationsPage } from "./pages/OrganizationsPage";
 import "./index.css";
 
-type Page = "dashboard" | "organizations";
+type Page = "dashboard" | "organizations" | "organization-detail";
 
 export default function App() {
   const [page, setPage] = useState<Page>("dashboard");
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | null>(
+    null
+  );
+
+  function openOrganization(id: string) {
+    setSelectedOrganizationId(id);
+    setPage("organization-detail");
+  }
+
+  function goToOrganizations() {
+    setPage("organizations");
+  }
 
   return (
     <div className="app">
@@ -22,7 +35,7 @@ export default function App() {
 
         <button
           className={page === "organizations" ? "active" : ""}
-          onClick={() => setPage("organizations")}
+          onClick={goToOrganizations}
         >
           Организации
         </button>
@@ -30,7 +43,17 @@ export default function App() {
 
       <main className="content">
         {page === "dashboard" && <DashboardPage />}
-        {page === "organizations" && <OrganizationsPage />}
+
+        {page === "organizations" && (
+          <OrganizationsPage onSelectOrganization={openOrganization} />
+        )}
+
+        {page === "organization-detail" && selectedOrganizationId && (
+          <OrganizationDetailPage
+            organizationId={selectedOrganizationId}
+            onBack={goToOrganizations}
+          />
+        )}
       </main>
     </div>
   );

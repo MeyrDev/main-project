@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { getOrganizations } from "../api/client";
 import type { OrganizationListItem } from "../types";
 
-export function OrganizationsPage() {
+type Props = {
+  onSelectOrganization: (id: string) => void;
+};
+
+export function OrganizationsPage({ onSelectOrganization }: Props) {
   const [items, setItems] = useState<OrganizationListItem[]>([]);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
@@ -44,7 +48,7 @@ export function OrganizationsPage() {
           placeholder="Поиск по названию или БИН"
         />
 
-        <button onClick={() => loadOrganizations(0)}>Найти</button>
+        <button className="button" onClick={() => loadOrganizations(0)}>Найти</button>
       </div>
 
       {error && <div className="error">Ошибка загрузки: {error}</div>}
@@ -59,6 +63,7 @@ export function OrganizationsPage() {
             <th>Сегмент</th>
             <th>Выручка</th>
             <th>Сотрудники</th>
+            <th>Действия</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +76,11 @@ export function OrganizationsPage() {
               <td>{organization.segment ?? "-"}</td>
               <td>{organization.annual_revenue ?? "-"}</td>
               <td>{organization.employees_count ?? "-"}</td>
+              <td>
+                <button className="button" onClick={() => onSelectOrganization(organization.id)}>
+                  Открыть
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -78,6 +88,7 @@ export function OrganizationsPage() {
 
       <div className="pagination">
         <button
+          className="button"
           disabled={!canGoBack}
           onClick={() => loadOrganizations(Math.max(offset - limit, 0))}
         >
@@ -89,6 +100,7 @@ export function OrganizationsPage() {
         </span>
 
         <button
+          className="button"
           disabled={!canGoNext}
           onClick={() => loadOrganizations(offset + limit)}
         >

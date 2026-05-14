@@ -104,8 +104,7 @@ button {
   border-radius: 8px;
 }
 
-.toolbar button,
-.pagination button {
+.button {
   padding: 10px 14px;
   border: 0;
   border-radius: 8px;
@@ -149,4 +148,80 @@ th {
   border-radius: 8px;
   background: #fee2e2;
   color: #991b1b;
+}
+
+.secondary-button {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #4b5563;
+  color: white;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.details-grid div,
+.risk-box div {
+  padding: 16px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.details-grid span,
+.risk-box span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.details-grid strong,
+.risk-box strong {
+  font-size: 18px;
+}
+
+.risk-box {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.feature-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.feature-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #374151;
+}
+
+.feature-form input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.feature-form button {
+  align-self: end;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
 }

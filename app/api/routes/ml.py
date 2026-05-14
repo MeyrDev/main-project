@@ -1,10 +1,11 @@
 """
 API ML-модуля.
 
-Содержит endpoint для запуска прогнозирования риска по организации.
-Метод берёт последний feature_snapshot, применяет ML-модель
-и сохраняет результат в risk_predictions.
+Содержит endpoint'ы для запуска прогнозирования риска:
+1. по последнему снимку признаков организации;
+2. по конкретному снимку признаков риска.
 """
+
 from datetime import datetime, timezone
 from uuid import UUID
 
@@ -13,30 +14,21 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
-from app.ml.predictor import predict_risk
+from app.ml.predictor import ARTIFACT_PATH, load_artifact, predict_risk
 from app.models import (
     MLModel,
     Organization,
     RiskFeatureSnapshot,
     RiskPrediction,
 )
-from app.schemas import RiskPredictionItem
-from app.ml.predictor import ARTIFACT_PATH, load_artifact, predict_risk
 from app.schemas import MLModelInfo, RiskPredictionItem
 from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/ml", tags=["ML"])
 
+
 @router.get("/model-info", response_model=MLModelInfo)
 def get_model_info():
-    """
-    Возвращает информацию об используемой ML-модели.
-
-    Endpoint нужен для демонстрации того, какая модель применяется
-    в системе прогнозирования риска, какие признаки она использует
-    и какие метрики качества были получены при обучении.
-    """
-
     if not ARTIFACT_PATH.exists():
         raise HTTPException(
             status_code=404,
@@ -55,8 +47,9 @@ def get_model_info():
         status="ready",
     )
 
+
 @router.post("/predict/{organization_id}", response_model=RiskPredictionItem)
-def predict_organization_risk(
+def predict_latest_organization_risk(
     organization_id: UUID,
     db: Session = Depends(get_db),
 ):
@@ -65,14 +58,12 @@ def predict_organization_risk(
     if organization is None:
         raise HTTPException(status_code=404, detail="Organization not found")
 
-    snapshot_stmt = (
+    snapshot = db.scalars(
         select(RiskFeatureSnapshot)
         .where(RiskFeatureSnapshot.organization_id == organization_id)
         .order_by(RiskFeatureSnapshot.period_date.desc())
         .limit(1)
-    )
-
-    snapshot = db.scalars(snapshot_stmt).first()
+    ).first()
 
     if snapshot is None:
         raise HTTPException(
@@ -80,6 +71,40 @@ def predict_organization_risk(
             detail="No risk feature snapshot found for this organization",
         )
 
+    return create_prediction_from_snapshot(
+        db=db,
+        organization=organization,
+        snapshot=snapshot,
+    )
+
+
+@router.post("/predict-snapshot/{snapshot_id}", response_model=RiskPredictionItem)
+def predict_risk_by_snapshot(
+    snapshot_id: UUID,
+    db: Session = Depends(get_db),
+):
+    snapshot = db.get(RiskFeatureSnapshot, snapshot_id)
+
+    if snapshot is None:
+        raise HTTPException(status_code=404, detail="Feature snapshot not found")
+
+    organization = db.get(Organization, snapshot.organization_id)
+
+    if organization is None:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return create_prediction_from_snapshot(
+        db=db,
+        organization=organization,
+        snapshot=snapshot,
+    )
+
+
+def create_prediction_from_snapshot(
+    db: Session,
+    organization: Organization,
+    snapshot: RiskFeatureSnapshot,
+) -> RiskPrediction:
     try:
         risk_score, risk_level, explanation = predict_risk(snapshot)
     except FileNotFoundError as error:
@@ -121,7 +146,7 @@ def predict_organization_risk(
         risk_level=risk_level,
         explanation=explanation,
         recommendations={
-            "actions": build_recommendations(str(risk_level.value))
+            "actions": build_recommendations(risk_level.value)
         },
     )
 
@@ -135,11 +160,14 @@ def predict_organization_risk(
         entity_id=prediction.id,
         details={
             "organization_id": str(organization.id),
+            "feature_snapshot_id": str(snapshot.id),
+            "period_date": snapshot.period_date.isoformat(),
             "risk_score": str(risk_score),
             "risk_level": risk_level.value,
             "model": "gradient_boosting_risk_model",
         },
     )
+
     db.commit()
     db.refresh(prediction)
 

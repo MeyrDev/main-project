@@ -1,9 +1,23 @@
-import type { DashboardSummary, OrganizationListResponse } from "../types";
+import type {
+  DashboardSummary,
+  OrganizationDetail,
+  OrganizationListResponse,
+  OrganizationRiskResponse,
+  RiskFeatureSnapshotCreate,
+  RiskFeatureSnapshotItem,
+  RiskPredictionItem,
+} from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
-async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options?.headers ?? {}),
+    },
+  });
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -40,4 +54,53 @@ export function getOrganizations(params?: {
   return request<OrganizationListResponse>(
     `/api/organizations?${searchParams.toString()}`
   );
+}
+
+export function getOrganization(id: string): Promise<OrganizationDetail> {
+  return request<OrganizationDetail>(`/api/organizations/${id}`);
+}
+
+export function getOrganizationRisk(id: string): Promise<OrganizationRiskResponse> {
+  return request<OrganizationRiskResponse>(`/api/organizations/${id}/risk`);
+}
+
+export function getOrganizationRiskHistory(
+  id: string
+): Promise<RiskPredictionItem[]> {
+  return request<RiskPredictionItem[]>(`/api/organizations/${id}/risk-history`);
+}
+
+export function getOrganizationFeatureSnapshots(
+  id: string
+): Promise<RiskFeatureSnapshotItem[]> {
+  return request<RiskFeatureSnapshotItem[]>(
+    `/api/organizations/${id}/feature-snapshots`
+  );
+}
+
+export function createOrganizationFeatureSnapshot(
+  id: string,
+  payload: RiskFeatureSnapshotCreate
+): Promise<RiskFeatureSnapshotItem> {
+  return request<RiskFeatureSnapshotItem>(
+    `/api/organizations/${id}/feature-snapshots`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }
+  );
+}
+
+export function predictOrganizationRisk(id: string): Promise<RiskPredictionItem> {
+  return request<RiskPredictionItem>(`/api/ml/predict/${id}`, {
+    method: "POST",
+  });
+}
+
+export function predictRiskBySnapshot(
+  snapshotId: string
+): Promise<RiskPredictionItem> {
+  return request<RiskPredictionItem>(`/api/ml/predict-snapshot/${snapshotId}`, {
+    method: "POST",
+  });
 }
