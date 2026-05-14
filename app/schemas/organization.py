@@ -10,7 +10,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
-
+from app.schemas.pagination import PaginatedResponse
 
 class OrganizationCreate(BaseModel):
     bin: str | None = Field(
@@ -82,6 +82,8 @@ class OrganizationListItem(BaseModel):
     annual_revenue: Decimal | None
     employees_count: int | None
 
+class OrganizationListResponse(PaginatedResponse[OrganizationListItem]):
+    pass
 
 class OrganizationDetail(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -155,3 +157,9 @@ class OrganizationUpdate(BaseModel):
         default=None,
         description="Описание организации",
     )
+
+class OrganizationFilters(BaseModel):
+    industries: list[str]
+    regions: list[str]
+    segments: list[str]
+    statuses: list[str]

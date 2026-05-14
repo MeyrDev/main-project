@@ -1,18 +1,28 @@
 """
 Точка входа FastAPI-приложения.
 
-Файл создаёт экземпляр приложения, подключает все API-маршруты
-и предоставляет health-check endpoint для проверки работоспособности backend.
+Файл создаёт экземпляр приложения, подключает API-маршруты,
+настраивает CORS для frontend-приложения и предоставляет health-check endpoint.
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import api_router
+from app.core.config import settings
 
 app = FastAPI(
     title="Risk CRM API",
     description="CRM-система прогнозирования рисков хозяйствующих субъектов",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(api_router)

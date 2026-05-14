@@ -7,7 +7,7 @@ API для работы с организациями.
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
@@ -16,29 +16,84 @@ from app.schemas import (
     OrganizationCreate,
     OrganizationDetail,
     OrganizationListItem,
+    OrganizationFilters,
     OrganizationRiskResponse,
     OrganizationRiskHistoryItem,
-    OrganizationUpdate
+    OrganizationUpdate,
+    OrganizationListResponse,
 )
 from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/organizations", tags=["Organizations"])
 
-
-@router.get("", response_model=list[OrganizationListItem])
+@router.get("", response_model=OrganizationListResponse)
 def get_organizations(
     db: Session = Depends(get_db),
+    search: str | None = Query(
+        default=None,
+        description="Поиск по названию организации или БИН",
+    ),
+    industry: str | None = Query(
+        default=None,
+        description="Фильтр по отрасли",
+    ),
+    region: str | None = Query(
+        default=None,
+        description="Фильтр по региону",
+    ),
+    segment: str | None = Query(
+        default=None,
+        description="Фильтр по сегменту бизнеса",
+    ),
+    status: str | None = Query(
+        default=None,
+        description="Фильтр по статусу организации",
+    ),
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
 ):
-    stmt = (
-        select(Organization)
+    base_stmt = select(Organization)
+
+    if search:
+        search_pattern = f"%{search.strip()}%"
+
+        base_stmt = base_stmt.where(
+            or_(
+                Organization.name.ilike(search_pattern),
+                Organization.bin.ilike(search_pattern),
+            )
+        )
+
+    if industry:
+        base_stmt = base_stmt.where(Organization.industry == industry)
+
+    if region:
+        base_stmt = base_stmt.where(Organization.region == region)
+
+    if segment:
+        base_stmt = base_stmt.where(Organization.segment == segment)
+
+    if status:
+        base_stmt = base_stmt.where(Organization.status == status)
+
+    total_stmt = select(func.count()).select_from(base_stmt.subquery())
+    total = db.scalar(total_stmt) or 0
+
+    items_stmt = (
+        base_stmt
         .order_by(Organization.created_at.desc())
         .limit(limit)
         .offset(offset)
     )
 
-    return db.scalars(stmt).all()
+    items = db.scalars(items_stmt).all()
+
+    return OrganizationListResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.post("", response_model=OrganizationDetail, status_code=201)
@@ -80,6 +135,33 @@ def create_organization(
 
     return organization
 
+@router.get("/filters", response_model=OrganizationFilters)
+def get_organization_filters(
+    db: Session = Depends(get_db),
+):
+    industries = get_distinct_values(db, Organization.industry)
+    regions = get_distinct_values(db, Organization.region)
+    segments = get_distinct_values(db, Organization.segment)
+    statuses = get_distinct_values(db, Organization.status)
+
+    return OrganizationFilters(
+        industries=industries,
+        regions=regions,
+        segments=segments,
+        statuses=statuses,
+    )
+
+
+def get_distinct_values(db: Session, column) -> list[str]:
+    stmt = (
+        select(column)
+        .where(column.is_not(None))
+        .where(func.length(column) > 0)
+        .distinct()
+        .order_by(column)
+    )
+
+    return [value for value in db.scalars(stmt).all() if value]
 
 @router.get("/{organization_id}", response_model=OrganizationDetail)
 def get_organization(
