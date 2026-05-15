@@ -4,14 +4,20 @@ import { OrganizationDetailPage } from "./pages/OrganizationDetailPage";
 import { OrganizationsPage } from "./pages/OrganizationsPage";
 import "./index.css";
 import { InteractionsPage } from "./features/interactions/InteractionsPage";
+import { ReportsPage } from "./features/reports/ReportsPage";
 
-type Page = "dashboard" | "organizations" | "organization-detail" | "interactions";
+type Page =
+  | "dashboard"
+  | "organizations"
+  | "organization-detail"
+  | "interactions"
+  | "reports";
 
 export default function App() {
   const [page, setPage] = useState<Page>("dashboard");
-  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | null>(
-    null
-  );
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<
+    string | null
+  >(null);
 
   function openOrganization(id: string) {
     setSelectedOrganizationId(id);
@@ -47,6 +53,13 @@ export default function App() {
         >
           Взаимодействия
         </button>
+
+        <button
+          className={page === "reports" ? "active" : ""}
+          onClick={() => setPage("reports")}
+        >
+          Отчёты
+        </button>
       </aside>
 
       <main className="content">
@@ -64,6 +77,8 @@ export default function App() {
         )}
 
         {page === "interactions" && <InteractionsPage />}
+
+        {page === "reports" && <ReportsPage />}
       </main>
     </div>
   );
