@@ -6,6 +6,8 @@ import type {
   RiskFeatureSnapshotCreate,
   RiskFeatureSnapshotItem,
   RiskPredictionItem,
+  OrganizationCreate,
+  OrganizationUpdate
 } from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
@@ -102,5 +104,24 @@ export function predictRiskBySnapshot(
 ): Promise<RiskPredictionItem> {
   return request<RiskPredictionItem>(`/api/ml/predict-snapshot/${snapshotId}`, {
     method: "POST",
+  });
+}
+
+export function createOrganization(
+  payload: OrganizationCreate
+): Promise<OrganizationDetail> {
+  return request<OrganizationDetail>("/api/organizations", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateOrganization(
+  id: string,
+  payload: OrganizationUpdate
+): Promise<OrganizationDetail> {
+  return request<OrganizationDetail>(`/api/organizations/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
   });
 }

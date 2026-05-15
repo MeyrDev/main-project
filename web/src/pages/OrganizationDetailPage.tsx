@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent, type SyntheticEvent } from "react";
 import {
   createOrganizationFeatureSnapshot,
   getOrganization,
@@ -7,6 +7,7 @@ import {
   getOrganizationRiskHistory,
   predictOrganizationRisk,
   predictRiskBySnapshot,
+  updateOrganization
 } from "../api/client";
 import type {
   OrganizationDetail,
@@ -31,6 +32,17 @@ type FeatureFormState = {
   employees_count: string;
 };
 
+type OrganizationEditFormState = {
+  bin: string;
+  name: string;
+  industry: string;
+  region: string;
+  segment: string;
+  annual_revenue: string;
+  employees_count: string;
+  description: string;
+};
+
 const initialForm: FeatureFormState = {
   period_date: "2026-06-01",
   revenue: "80000000",
@@ -45,6 +57,17 @@ const initialForm: FeatureFormState = {
 export function OrganizationDetailPage({ organizationId, onBack }: Props) {
   const [organization, setOrganization] = useState<OrganizationDetail | null>(null);
   const [risk, setRisk] = useState<OrganizationRiskResponse | null>(null);
+  const [isEditingOrganization, setIsEditingOrganization] = useState(false);
+  const [editForm, setEditForm] = useState<OrganizationEditFormState>({
+    bin: "",
+    name: "",
+    industry: "",
+    region: "",
+    segment: "",
+    annual_revenue: "",
+    employees_count: "",
+    description: "",
+  });
   const [riskHistory, setRiskHistory] = useState<RiskPredictionItem[]>([]);
   const [snapshots, setSnapshots] = useState<RiskFeatureSnapshotItem[]>([]);
   const [form, setForm] = useState<FeatureFormState>(initialForm);
@@ -66,9 +89,20 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
         setRisk(riskData);
         setRiskHistory(historyData);
         setSnapshots(snapshotsData);
+
+        setEditForm({
+          bin: organizationData.bin ?? "",
+          name: organizationData.name,
+          industry: organizationData.industry ?? "",
+          region: organizationData.region ?? "",
+          segment: organizationData.segment ?? "",
+          annual_revenue: organizationData.annual_revenue ?? "",
+          employees_count: organizationData.employees_count
+            ? String(organizationData.employees_count)
+            : "",
+          description: organizationData.description ?? "",
+        });
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -82,11 +116,57 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
     }));
   }
 
+  function updateEditFormField(
+  field: keyof OrganizationEditFormState,
+  value: string
+) {
+  setEditForm((current) => ({
+    ...current,
+    [field]: value,
+  }));
+}
+
+  function toStringOrNull(value: string): string | null {
+    const trimmed = value.trim();
+
+    return trimmed ? trimmed : null;
+  }
+
+  function toNumberOrNull(value: string): number | null {
+    if (!value.trim()) {
+      return null;
+    }
+
+    return Number(value);
+  }
+
+  function handleUpdateOrganization(event: SyntheticEvent) {
+    event.preventDefault();
+
+    updateOrganization(organizationId, {
+      bin: toStringOrNull(editForm.bin),
+      name: editForm.name.trim(),
+      industry: toStringOrNull(editForm.industry),
+      region: toStringOrNull(editForm.region),
+      segment: toStringOrNull(editForm.segment),
+      status: "active",
+      annual_revenue: toNumberOrNull(editForm.annual_revenue),
+      employees_count: toNumberOrNull(editForm.employees_count),
+      description: toStringOrNull(editForm.description),
+    })
+      .then((updatedOrganization) => {
+        setOrganization(updatedOrganization);
+        setIsEditingOrganization(false);
+        loadData();
+      })
+      .catch((err) => setError(err.message));
+  }
+
   function toNumber(value: string): number {
     return Number(value || 0);
   }
 
-  function handleCreateSnapshot(event: FormEvent) {
+  function handleCreateSnapshot(event: ChangeEvent<HTMLFormElement>) {
     event.preventDefault();
 
     createOrganizationFeatureSnapshot(organizationId, {
@@ -146,39 +226,132 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
       {error && <div className="error">Ошибка: {error}</div>}
 
       <section className="section">
-        <h2>Карточка организации</h2>
+        <div className="section-header">
+          <h2>Карточка организации</h2>
 
-        <div className="details-grid">
-          <div>
-            <span>БИН</span>
-            <strong>{organization.bin ?? "-"}</strong>
-          </div>
-
-          <div>
-            <span>Отрасль</span>
-            <strong>{organization.industry ?? "-"}</strong>
-          </div>
-
-          <div>
-            <span>Регион</span>
-            <strong>{organization.region ?? "-"}</strong>
-          </div>
-
-          <div>
-            <span>Сегмент</span>
-            <strong>{organization.segment ?? "-"}</strong>
-          </div>
-
-          <div>
-            <span>Годовая выручка</span>
-            <strong>{organization.annual_revenue ?? "-"}</strong>
-          </div>
-
-          <div>
-            <span>Сотрудники</span>
-            <strong>{organization.employees_count ?? "-"}</strong>
-          </div>
+          <button onClick={() => setIsEditingOrganization((value) => !value)}>
+            {isEditingOrganization ? "Отмена" : "Редактировать"}
+          </button>
         </div>
+
+        {!isEditingOrganization ? (
+          <div className="details-grid">
+            <div>
+              <span>БИН</span>
+              <strong>{organization.bin ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Отрасль</span>
+              <strong>{organization.industry ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Регион</span>
+              <strong>{organization.region ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Сегмент</span>
+              <strong>{organization.segment ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Годовая выручка</span>
+              <strong>{organization.annual_revenue ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Сотрудники</span>
+              <strong>{organization.employees_count ?? "-"}</strong>
+            </div>
+
+            <div>
+              <span>Описание</span>
+              <strong>{organization.description ?? "-"}</strong>
+            </div>
+          </div>
+        ) : (
+          <form className="organization-form" onSubmit={handleUpdateOrganization}>
+            <label>
+              БИН
+              <input
+                value={editForm.bin}
+                onChange={(event) => updateEditFormField("bin", event.target.value)}
+                placeholder="12 цифр"
+              />
+            </label>
+
+            <label>
+              Название
+              <input
+                value={editForm.name}
+                onChange={(event) => updateEditFormField("name", event.target.value)}
+                required
+              />
+            </label>
+
+            <label>
+              Отрасль
+              <input
+                value={editForm.industry}
+                onChange={(event) =>
+                  updateEditFormField("industry", event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Регион
+              <input
+                value={editForm.region}
+                onChange={(event) => updateEditFormField("region", event.target.value)}
+              />
+            </label>
+
+            <label>
+              Сегмент
+              <input
+                value={editForm.segment}
+                onChange={(event) =>
+                  updateEditFormField("segment", event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Годовая выручка
+              <input
+                value={editForm.annual_revenue}
+                onChange={(event) =>
+                  updateEditFormField("annual_revenue", event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Сотрудники
+              <input
+                value={editForm.employees_count}
+                onChange={(event) =>
+                  updateEditFormField("employees_count", event.target.value)
+                }
+              />
+            </label>
+
+            <label>
+              Описание
+              <input
+                value={editForm.description}
+                onChange={(event) =>
+                  updateEditFormField("description", event.target.value)
+                }
+              />
+            </label>
+
+            <button type="submit">Сохранить изменения</button>
+          </form>
+        )}
       </section>
 
       <section className="section">

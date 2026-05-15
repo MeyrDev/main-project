@@ -123,3 +123,17 @@ export type DashboardSummary = {
   recent_predictions: DashboardRecentPrediction[];
   recent_audit_logs: DashboardRecentAuditLog[];
 };
+
+export type OrganizationCreate = {
+  bin: string | null;
+  name: string;
+  industry: string | null;
+  region: string | null;
+  segment: string | null;
+  status: string;
+  annual_revenue: number | null;
+  employees_count: number | null;
+  description: string | null;
+};
+
+export type OrganizationUpdate = Partial<OrganizationCreate>;
