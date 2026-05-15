@@ -253,3 +253,39 @@ th {
   background: #2563eb;
   color: white;
 }
+
+.deal-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.deal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #374151;
+}
+
+.deal-form input,
+.deal-form select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.deal-form button {
+  align-self: end;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+}
+
+table select {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}

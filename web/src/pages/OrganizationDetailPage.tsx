@@ -15,6 +15,8 @@ import type {
   RiskFeatureSnapshotItem,
   RiskPredictionItem,
 } from "../types";
+import { toNumber, toNumberOrNull, toStringOrNull } from "../utils";
+import { Deals } from "../features/Deals";
 
 type Props = {
   organizationId: string;
@@ -117,27 +119,13 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
   }
 
   function updateEditFormField(
-  field: keyof OrganizationEditFormState,
-  value: string
-) {
-  setEditForm((current) => ({
-    ...current,
-    [field]: value,
-  }));
-}
-
-  function toStringOrNull(value: string): string | null {
-    const trimmed = value.trim();
-
-    return trimmed ? trimmed : null;
-  }
-
-  function toNumberOrNull(value: string): number | null {
-    if (!value.trim()) {
-      return null;
-    }
-
-    return Number(value);
+    field: keyof OrganizationEditFormState,
+    value: string
+  ) {
+    setEditForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
   }
 
   function handleUpdateOrganization(event: SyntheticEvent) {
@@ -154,17 +142,14 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
       employees_count: toNumberOrNull(editForm.employees_count),
       description: toStringOrNull(editForm.description),
     })
-      .then((updatedOrganization) => {
-        setOrganization(updatedOrganization);
-        setIsEditingOrganization(false);
-        loadData();
-      })
-      .catch((err) => setError(err.message));
+    .then((updatedOrganization) => {
+      setOrganization(updatedOrganization);
+      setIsEditingOrganization(false);
+      loadData();
+    })
+    .catch((err) => setError(err.message));
   }
 
-  function toNumber(value: string): number {
-    return Number(value || 0);
-  }
 
   function handleCreateSnapshot(event: ChangeEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -183,8 +168,8 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
         comment: "Признаки добавлены через frontend",
       },
     })
-      .then(() => loadData())
-      .catch((err) => setError(err.message));
+    .then(() => loadData())
+    .catch((err) => setError(err.message));
   }
 
   function handlePredictRisk() {
@@ -198,6 +183,7 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
       .then(() => loadData())
       .catch((err) => setError(err.message));
   }
+
   if (loading && !organization) {
     return <div>Загрузка карточки организации...</div>;
   }
@@ -384,6 +370,12 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
           <p>По организации ещё нет рассчитанного риска.</p>
         )}
       </section>
+
+      <Deals 
+        organizationId={organizationId}
+        loadData={loadData}
+        setError={setError}
+      />
 
       <section className="section">
         <h2>Добавить признаки риска</h2>

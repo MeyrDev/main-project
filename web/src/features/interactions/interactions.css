@@ -1,0 +1,40 @@
+.organization-select {
+  width: 420px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.muted {
+  color: #6b7280;
+}
+
+.interaction-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.interaction-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #374151;
+}
+
+.interaction-form input,
+.interaction-form select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.interaction-form button {
+  align-self: end;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+}

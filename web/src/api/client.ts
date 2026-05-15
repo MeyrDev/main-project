@@ -7,8 +7,9 @@ import type {
   RiskFeatureSnapshotItem,
   RiskPredictionItem,
   OrganizationCreate,
-  OrganizationUpdate
+  OrganizationUpdate,
 } from "../types";
+import type { DealCreate, DealItem, DealUpdate } from "../types/deals";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
@@ -121,6 +122,32 @@ export function updateOrganization(
   payload: OrganizationUpdate
 ): Promise<OrganizationDetail> {
   return request<OrganizationDetail>(`/api/organizations/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getOrganizationDeals(
+  organizationId: string
+): Promise<DealItem[]> {
+  return request<DealItem[]>(`/api/organizations/${organizationId}/deals`);
+}
+
+export function createOrganizationDeal(
+  organizationId: string,
+  payload: DealCreate
+): Promise<DealItem> {
+  return request<DealItem>(`/api/organizations/${organizationId}/deals`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateDeal(
+  dealId: string,
+  payload: DealUpdate
+): Promise<DealItem> {
+  return request<DealItem>(`/api/deals/${dealId}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
   });

@@ -3,8 +3,9 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { OrganizationDetailPage } from "./pages/OrganizationDetailPage";
 import { OrganizationsPage } from "./pages/OrganizationsPage";
 import "./index.css";
+import { InteractionsPage } from "./features/interactions/InteractionsPage";
 
-type Page = "dashboard" | "organizations" | "organization-detail";
+type Page = "dashboard" | "organizations" | "organization-detail" | "interactions";
 
 export default function App() {
   const [page, setPage] = useState<Page>("dashboard");
@@ -39,6 +40,13 @@ export default function App() {
         >
           Организации
         </button>
+
+        <button
+          className={page === "interactions" ? "active" : ""}
+          onClick={() => setPage("interactions")}
+        >
+          Взаимодействия
+        </button>
       </aside>
 
       <main className="content">
@@ -54,6 +62,8 @@ export default function App() {
             onBack={goToOrganizations}
           />
         )}
+
+        {page === "interactions" && <InteractionsPage />}
       </main>
     </div>
   );
