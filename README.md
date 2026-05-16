@@ -17,6 +17,21 @@
 
 ---
 
+## Быстрый запуск всего проекта
+
+Проект состоит из трёх основных сервисов:
+
+- `db` — PostgreSQL;
+- `app` — FastAPI backend;
+- `web` — React frontend.
+
+Первый запуск проекта:
+
+```bash
+cp .env.example .env
+cp web/.env.example web/.env
+make init
+
 ## 1. Основные таблицы БД
 
 Текущая схема базы данных включает:
