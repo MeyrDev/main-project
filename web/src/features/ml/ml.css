@@ -1,0 +1,35 @@
+.ml-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.ml-info-card {
+  padding: 16px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.ml-info-card.wide {
+  grid-column: span 4;
+}
+
+.ml-info-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.ml-info-card strong {
+  font-size: 16px;
+  word-break: break-word;
+}
+
+.ml-flow {
+  padding: 16px;
+  border-radius: 10px;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 14px;
+}

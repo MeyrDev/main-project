@@ -1,0 +1,49 @@
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.audit-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #374151;
+}
+
+.audit-filters select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.audit-filters button {
+  align-self: end;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+}
+
+.audit-filters .secondary-audit-button {
+  background: #4b5563;
+}
+
+.audit-entity-id {
+  max-width: 220px;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.audit-details {
+  max-width: 360px;
+  max-height: 140px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 12px;
+}
