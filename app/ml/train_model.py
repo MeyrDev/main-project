@@ -1,9 +1,11 @@
 """
 Скрипт обучения ML-модели риска.
 
-Генерирует демонстрационный обучающий набор данных, обучает модель,
-рассчитывает метрики качества и сохраняет artifact в artifacts/risk_model.joblib.
+Генерирует демонстрационный обучающий набор данных, формирует признаки,
+обучает модель классификации риска, рассчитывает метрики качества
+и сохраняет artifact в artifacts/risk_model.joblib.
 """
+
 from pathlib import Path
 
 import joblib
@@ -23,56 +25,68 @@ from sklearn.model_selection import train_test_split
 ARTIFACT_PATH = Path("artifacts/risk_model.joblib")
 
 FEATURE_COLUMNS = [
-    "revenue",
-    "debt_amount",
+    "log_revenue",
+    "log_debt_amount",
     "debt_ratio",
     "overdue_days_30",
     "overdue_days_90",
     "disputes_count",
     "transactions_count",
     "employees_count",
+    "low_transactions_flag",
 ]
 
 
-def generate_training_data(n_samples: int = 5000, random_state: int = 42) -> pd.DataFrame:
+def sigmoid(value: np.ndarray) -> np.ndarray:
+    return 1 / (1 + np.exp(-value))
+
+
+def generate_training_data(n_samples: int = 8000, random_state: int = 42) -> pd.DataFrame:
     rng = np.random.default_rng(random_state)
 
-    revenue = rng.lognormal(mean=18.0, sigma=0.8, size=n_samples)
-    employees_count = rng.integers(5, 500, size=n_samples)
-    transactions_count = rng.integers(5, 600, size=n_samples)
+    revenue = rng.lognormal(mean=18.3, sigma=1.2, size=n_samples)
+    employees_count = rng.integers(3, 700, size=n_samples)
+    transactions_count = rng.integers(1, 800, size=n_samples)
 
-    debt_ratio_raw = rng.beta(a=2.0, b=5.0, size=n_samples)
-    debt_amount = revenue * debt_ratio_raw
+    debt_ratio_base = rng.beta(a=1.8, b=4.5, size=n_samples)
+    debt_amount = revenue * debt_ratio_base
 
-    overdue_days_30 = rng.poisson(lam=8, size=n_samples)
-    overdue_days_90 = rng.poisson(lam=3, size=n_samples)
-    disputes_count = rng.poisson(lam=2, size=n_samples)
+    overdue_days_30 = rng.poisson(lam=7, size=n_samples)
+    overdue_days_90 = rng.poisson(lam=2.5, size=n_samples)
+    disputes_count = rng.poisson(lam=1.8, size=n_samples)
 
     debt_ratio = debt_amount / np.maximum(revenue, 1)
+    low_transactions_flag = (transactions_count < 50).astype(int)
 
-    risk_linear = (
-        2.8 * debt_ratio
-        + 0.025 * overdue_days_30
-        + 0.045 * overdue_days_90
-        + 0.18 * disputes_count
-        - 0.0012 * transactions_count
-        - 0.0005 * employees_count
-        - 1.1
+    log_revenue = np.log1p(revenue)
+    log_debt_amount = np.log1p(debt_amount)
+
+    domain_score = (
+        np.clip(debt_ratio, 0, 1) * 0.38
+        + np.clip(overdue_days_30 / 60, 0, 1) * 0.18
+        + np.clip(overdue_days_90 / 90, 0, 1) * 0.22
+        + np.clip(disputes_count / 10, 0, 1) * 0.14
+        + low_transactions_flag * 0.08
     )
 
-    probability = 1 / (1 + np.exp(-risk_linear))
+    noise = rng.normal(0, 0.08, size=n_samples)
+    probability = np.clip(domain_score + noise, 0, 1)
+
     target = rng.binomial(1, probability)
 
     df = pd.DataFrame(
         {
             "revenue": revenue,
             "debt_amount": debt_amount,
+            "log_revenue": log_revenue,
+            "log_debt_amount": log_debt_amount,
             "debt_ratio": debt_ratio,
             "overdue_days_30": overdue_days_30,
             "overdue_days_90": overdue_days_90,
             "disputes_count": disputes_count,
             "transactions_count": transactions_count,
             "employees_count": employees_count,
+            "low_transactions_flag": low_transactions_flag,
             "target": target,
         }
     )
@@ -94,7 +108,12 @@ def main() -> None:
         stratify=y,
     )
 
-    base_model = GradientBoostingClassifier(random_state=42)
+    base_model = GradientBoostingClassifier(
+        random_state=42,
+        n_estimators=180,
+        learning_rate=0.05,
+        max_depth=3,
+    )
 
     model = CalibratedClassifierCV(
         estimator=base_model,
@@ -119,7 +138,7 @@ def main() -> None:
         "feature_columns": FEATURE_COLUMNS,
         "metrics": metrics,
         "model_name": "gradient_boosting_risk_model",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "algorithm_name": "GradientBoostingClassifier + IsotonicCalibration",
     }
 

@@ -7,6 +7,7 @@ import { InteractionsPage } from "./features/interactions/InteractionsPage";
 import { ReportsPage } from "./features/reports/ReportsPage";
 import { AuditLogsPage } from "./features/audit/AuditLogsPage";
 import { MLModelPage } from "./features/ml/MLModelPage";
+import { RiskExplanationPage } from "./features/risk-explanation/RiskExplanationPage";
 
 type Page =
   | "dashboard"
@@ -15,7 +16,8 @@ type Page =
   | "interactions"
   | "reports"
   | "audit"
-  | "ml-model";
+  | "ml-model"
+  | "risk-explanation";
 
 export default function App() {
   const [page, setPage] = useState<Page>("dashboard");
@@ -78,6 +80,13 @@ export default function App() {
         >
           ML-модель
         </button>
+
+        <button
+          className={page === "risk-explanation" ? "active" : ""}
+          onClick={() => setPage("risk-explanation")}
+        >
+          Объяснение рисков
+        </button>
       </aside>
 
       <main className="content">
@@ -101,6 +110,8 @@ export default function App() {
         {page === "audit" && <AuditLogsPage />}
 
         {page === "ml-model" && <MLModelPage />}
+
+        {page === "risk-explanation" && <RiskExplanationPage />}
       </main>
     </div>
   );
