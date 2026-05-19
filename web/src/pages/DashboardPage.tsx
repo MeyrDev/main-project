@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDashboardSummary } from "../api/client";
 import type { DashboardSummary } from "../types";
+import { mapRisk } from "../features/risk-explanation/RiskScoresBlock";
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardSummary | null>(null);
@@ -59,7 +60,7 @@ export function DashboardPage() {
           <tbody>
             {data.risk_distribution.map((item) => (
               <tr key={item.risk_level}>
-                <td>{item.risk_level}</td>
+                <td>{mapRisk[item.risk_level as keyof typeof mapRisk] || item.risk_level}</td>
                 <td>{item.count}</td>
               </tr>
             ))}
@@ -87,7 +88,7 @@ export function DashboardPage() {
                 <td>{item.industry ?? "-"}</td>
                 <td>{item.region ?? "-"}</td>
                 <td>{item.risk_score}</td>
-                <td>{item.risk_level}</td>
+                <td>{mapRisk[item.risk_level as keyof typeof mapRisk] || item.risk_level}</td>
               </tr>
             ))}
           </tbody>

@@ -6,6 +6,12 @@ type Props = {
   riskLevel: string;
 };
 
+export const mapRisk = {
+  low: "Низкий",
+  medium: "Средний",
+  high: "Высокий",
+};
+
 export function RiskScoresBlock({ explanation, riskScore, riskLevel }: Props) {
   const scores = explanation?.scores;
 
@@ -18,7 +24,7 @@ export function RiskScoresBlock({ explanation, riskScore, riskLevel }: Props) {
 
       <div className="risk-score-card">
         <span>Уровень риска</span>
-        <strong>{riskLevel}</strong>
+        <strong>{mapRisk[riskLevel as keyof typeof mapRisk] || riskLevel}</strong>
       </div>
 
       <div className="risk-score-card">

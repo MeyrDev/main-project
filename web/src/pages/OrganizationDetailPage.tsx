@@ -215,7 +215,7 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
         <div className="section-header">
           <h2>Карточка организации</h2>
 
-          <button onClick={() => setIsEditingOrganization((value) => !value)}>
+          <button className="button" onClick={() => setIsEditingOrganization((value) => !value)}>
             {isEditingOrganization ? "Отмена" : "Редактировать"}
           </button>
         </div>
@@ -487,7 +487,7 @@ export function OrganizationDetailPage({ organizationId, onBack }: Props) {
                 <td>{snapshot.disputes_count}</td>
                 <td>{snapshot.transactions_count}</td>
                 <td>
-                  <button onClick={() => handlePredictSnapshot(snapshot.id)}>
+                  <button className="button" onClick={() => handlePredictSnapshot(snapshot.id)}>
                     Прогноз
                   </button>
                 </td>

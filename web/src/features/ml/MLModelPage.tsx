@@ -27,7 +27,7 @@ export function MLModelPage() {
       <div className="section-header">
         <h1>ML-модель</h1>
 
-        <button onClick={loadModelInfo}>Обновить</button>
+        <button className="button" onClick={loadModelInfo}>Обновить</button>
       </div>
 
       {error && (

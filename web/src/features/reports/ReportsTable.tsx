@@ -32,7 +32,7 @@ export function ReportsTable({ items, onSelectReport }: Props) {
             <td>{new Date(report.created_at).toLocaleString()}</td>
             <td>{report.file_path ?? "JSON-отчёт"}</td>
             <td>
-              <button onClick={() => onSelectReport(report.id)}>
+              <button className="button" onClick={() => onSelectReport(report.id)}>
                 Открыть отчёт
               </button>
             </td>
