@@ -1,67 +1,74 @@
-.report-form {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(180px, 1fr));
-  gap: 16px;
-}
-
-.report-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: #374151;
-}
-
-.report-form input,
-.report-form select {
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-}
-
-.report-form button {
-  align-self: end;
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-}
-
-.report-data {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.report-data-header {
+.report-info-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(160px, 1fr));
   gap: 16px;
+  margin-bottom: 20px;
 }
 
-.report-data-header div {
+.report-info-grid div,
+.report-grid div,
+.report-risk-grid div {
   padding: 16px;
   border-radius: 10px;
   background: #f9fafb;
+  border: 1px solid #e5e7eb;
 }
 
-.report-data-header span {
+.report-info-grid span,
+.report-grid span,
+.report-risk-grid span {
   display: block;
   margin-bottom: 6px;
   color: #6b7280;
   font-size: 14px;
 }
 
-.report-data-header strong {
+.report-info-grid strong,
+.report-grid strong,
+.report-risk-grid strong {
   font-size: 16px;
+  word-break: break-word;
 }
 
-.report-data pre {
-  max-height: 520px;
-  overflow: auto;
-  padding: 16px;
+.report-view {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.report-block {
+  padding: 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.report-block h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.report-grid .wide {
+  grid-column: span 3;
+}
+
+.report-risk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.report-conclusion {
+  margin: 0;
+  padding: 14px;
   border-radius: 10px;
-  background: #111827;
-  color: #f9fafb;
-  font-size: 13px;
+  background: #f9fafb;
+  color: #374151;
+  line-height: 1.5;
 }

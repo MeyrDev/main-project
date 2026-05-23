@@ -4,6 +4,12 @@ type Props = {
   model: MLModelInfo;
 };
 
+const statusMap: Record<string, string> = {
+  "training": "Обучение",
+  "ready": "Готова",
+  "failed": "Ошибка",
+}
+
 export function MLModelInfoCard({ model }: Props) {
   return (
     <div className="ml-info-grid">
@@ -24,7 +30,7 @@ export function MLModelInfoCard({ model }: Props) {
 
       <div className="ml-info-card">
         <span>Статус</span>
-        <strong>{model.status}</strong>
+        <strong>{statusMap[model.status] ||  model.status}</strong>
       </div>
 
       <div className="ml-info-card wide">

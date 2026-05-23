@@ -2,7 +2,7 @@ type Props = {
   featureColumns: string[];
 };
 
-const featureDescriptions: Record<string, string> = {
+export const featureDescriptions: Record<string, string> = {
   revenue: "Выручка организации за период",
   debt_amount: "Сумма задолженности",
   debt_ratio: "Доля задолженности относительно выручки",

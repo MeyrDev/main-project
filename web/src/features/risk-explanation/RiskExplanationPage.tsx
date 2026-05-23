@@ -7,6 +7,7 @@ import { RiskRecommendations } from "./RiskRecommendations";
 import { RiskScoresBlock } from "./RiskScoresBlock";
 import type { OrganizationRiskResponse } from "./types";
 import "./riskExplanation.css";
+import { RiskUsedFeatures } from "./RiskUsedFeatures";
 
 export function RiskExplanationPage() {
   const [organizations, setOrganizations] = useState<OrganizationListItem[]>([]);
@@ -112,9 +113,7 @@ export function RiskExplanationPage() {
           <section className="section">
             <h2>Использованные признаки</h2>
 
-            <pre className="risk-json">
-              {JSON.stringify(explanation?.features ?? {}, null, 2)}
-            </pre>
+            <RiskUsedFeatures features={explanation?.features ?? {}} />
           </section>
 
           <section className="section">

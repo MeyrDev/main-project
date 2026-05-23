@@ -1,3 +1,7 @@
+import { ModelQualityReportView } from "./ModelQualityReportView";
+import { PortfolioAnalyticsReportView } from "./PortfolioAnalyticsReportView";
+import { ReportInfoCards } from "./ReportInfoCards";
+import { RiskSummaryReportView } from "./RiskSummaryReportView";
 import type { ReportData } from "./types";
 
 type Props = {
@@ -11,31 +15,23 @@ export function ReportDataView({ report }: Props) {
 
   return (
     <div className="report-data">
-      <div className="report-data-header">
-        <div>
-          <span>Название</span>
-          <strong>{report.title}</strong>
-        </div>
+      <ReportInfoCards report={report} />
 
-        <div>
-          <span>Тип</span>
-          <strong>{report.report_type}</strong>
-        </div>
+      {report.report_type === "risk_summary" && (
+        <RiskSummaryReportView content={report.content} />
+      )}
 
-        <div>
-          <span>Статус</span>
-          <strong>{report.status}</strong>
-        </div>
+      {report.report_type === "organization_card" && (
+        <RiskSummaryReportView content={report.content} />
+      )}
 
-        <div>
-          <span>Сформирован</span>
-          <strong>{new Date(report.generated_at).toLocaleString()}</strong>
-        </div>
-      </div>
+      {report.report_type === "portfolio_analytics" && (
+        <PortfolioAnalyticsReportView content={report.content} />
+      )}
 
-      <h3>Содержимое отчёта</h3>
-
-      <pre>{JSON.stringify(report.content, null, 2)}</pre>
+      {report.report_type === "model_quality" && (
+        <ModelQualityReportView content={report.content} />
+      )}
     </div>
   );
 }
