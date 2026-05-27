@@ -111,7 +111,7 @@ export function ReportForm({ organizations, onSubmit }: Props) {
         />
       </label>
 
-      <button type="submit">Создать отчёт</button>
+      <button className="button" type="submit">Создать отчёт</button>
     </form>
   );
 }

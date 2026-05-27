@@ -72,3 +72,21 @@
   color: #374151;
   line-height: 1.5;
 }
+
+.report-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.report-form label {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-form input,
+.report-form select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
