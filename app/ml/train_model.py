@@ -1,13 +1,4 @@
-"""
-Скрипт обучения ML-модели риска.
-
-Генерирует демонстрационный обучающий набор данных, формирует признаки,
-обучает модель классификации риска, рассчитывает метрики качества
-и сохраняет artifact в artifacts/risk_model.joblib.
-"""
-
 from pathlib import Path
-
 import joblib
 import numpy as np
 import pandas as pd

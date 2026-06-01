@@ -1,20 +1,9 @@
-"""
-Модуль применения ML-модели.
-
-Загружает сохранённый artifact, преобразует RiskFeatureSnapshot
-в набор признаков, рассчитывает вероятность риска и формирует
-понятное explanation для пользователя.
-"""
-
 from decimal import Decimal
 from pathlib import Path
-
 import joblib
 import numpy as np
 import pandas as pd
-
 from app.models import RiskFeatureSnapshot, RiskLevel
-
 
 ARTIFACT_PATH = Path("artifacts/risk_model.joblib")
 

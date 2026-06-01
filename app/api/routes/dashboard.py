@@ -1,17 +1,6 @@
-"""
-API для dashboard-аналитики.
-
-Возвращает агрегированные показатели CRM-системы:
-количество организаций, пользователей, сделок, прогнозов,
-распределение рисков, топ организаций с высоким риском,
-последние прогнозы и последние действия пользователей.
-"""
-
 from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
-
 from fastapi import APIRouter, Depends
-
 from app.api.deps import get_db
 from app.models import AuditLog, Deal, Organization, RiskPrediction, User
 from app.schemas import (
@@ -72,13 +61,6 @@ def get_risk_distribution(db: Session) -> list[RiskLevelCount]:
 
 
 def get_high_risk_organizations(db: Session) -> list[DashboardHighRiskOrganization]:
-    """
-    Возвращает топ организаций с самым высоким последним risk_score.
-
-    Используется подзапрос latest_predictions_subquery, чтобы брать
-    только последний прогноз по каждой организации.
-    """
-
     latest_predictions_subquery = (
         select(
             RiskPrediction.organization_id,

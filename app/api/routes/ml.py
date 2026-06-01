@@ -1,18 +1,8 @@
-"""
-API ML-модуля.
-
-Содержит endpoint'ы для запуска прогнозирования риска:
-1. по последнему снимку признаков организации;
-2. по конкретному снимку признаков риска.
-"""
-
 from datetime import datetime, timezone
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-
 from app.api.deps import get_db
 from app.ml.predictor import ARTIFACT_PATH, load_artifact, predict_risk
 from app.models import (
@@ -25,7 +15,6 @@ from app.schemas import MLModelInfo, RiskPredictionItem
 from app.services.audit import create_audit_log
 
 router = APIRouter(prefix="/ml", tags=["ML"])
-
 
 @router.get("/model-info", response_model=MLModelInfo)
 def get_model_info():

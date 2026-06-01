@@ -1,11 +1,3 @@
-"""
-Конфигурация приложения.
-
-Файл читает переменные окружения из .env.
-Здесь хранится строка подключения к PostgreSQL и настройки CORS,
-которые нужны для подключения frontend-приложения к backend API.
-"""
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

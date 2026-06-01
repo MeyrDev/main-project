@@ -1,10 +1,3 @@
-"""
-Точка входа FastAPI-приложения.
-
-Файл создаёт экземпляр приложения, подключает API-маршруты,
-настраивает CORS для frontend-приложения и предоставляет health-check endpoint.
-"""
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

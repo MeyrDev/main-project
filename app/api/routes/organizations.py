@@ -1,9 +1,3 @@
-"""
-API для работы с организациями.
-
-Содержит методы получения списка организаций, просмотра карточки организации,
-создания организации и получения последней оценки риска.
-"""
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -15,7 +9,6 @@ from app.models import Organization, RiskPrediction, organization
 from app.schemas import (
     OrganizationCreate,
     OrganizationDetail,
-    OrganizationListItem,
     OrganizationFilters,
     OrganizationRiskResponse,
     OrganizationRiskHistoryItem,
