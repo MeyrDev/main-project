@@ -32,6 +32,9 @@ seed:
 train:
 	docker compose run --rm --no-deps app python -m app.ml.train_model
 
+prepare-datasets:
+	python -m app.ml.prepare_datasets_from_csv
+
 init:
 	docker compose up -d --build
 	docker compose run --rm app alembic upgrade head
