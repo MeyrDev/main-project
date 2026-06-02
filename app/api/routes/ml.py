@@ -99,17 +99,24 @@ def create_prediction_from_snapshot(
     except FileNotFoundError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+    model_name = explanation.get("model_name", "gradient_boosting_risk_model")
+    model_version = explanation.get("version", "unknown")
+    algorithm_name = explanation.get(
+        "algorithm",
+        "GradientBoostingClassifier + IsotonicCalibration",
+    )
+
     model = db.scalar(
         select(MLModel)
-        .where(MLModel.name == "gradient_boosting_risk_model")
-        .where(MLModel.version == "1.0.0")
+        .where(MLModel.name == model_name)
+        .where(MLModel.version == model_version)
     )
 
     if model is None:
         model = MLModel(
-            name="gradient_boosting_risk_model",
-            version="1.0.0",
-            algorithm_name="GradientBoostingClassifier + IsotonicCalibration",
+            name=model_name,
+            version=model_version,
+            algorithm_name=algorithm_name,
             target_name="default_risk",
             artifact_path="artifacts/risk_model.joblib",
             metrics=explanation.get("metrics"),

@@ -14,7 +14,35 @@ def load_artifact() -> dict:
             "ML model artifact not found. Run: python -m app.ml.train_model"
         )
 
-    return joblib.load(ARTIFACT_PATH)
+    artifact = joblib.load(ARTIFACT_PATH)
+
+    if isinstance(artifact, dict):
+        artifact.setdefault("model_name", "gradient_boosting_risk_model")
+        artifact.setdefault("version", artifact.get("model_version", "unknown"))
+        artifact.setdefault("algorithm_name", artifact.get("algorithm", "unknown"))
+        artifact.setdefault("metrics", {})
+        return artifact
+
+    return {
+        "model": artifact,
+        "feature_columns": [
+            "log_revenue",
+            "log_debt_amount",
+            "debt_ratio",
+            "overdue_days_30",
+            "overdue_days_90",
+            "disputes_count",
+            "transactions_count",
+            "employees_count",
+            "low_transactions_flag",
+        ],
+        "target_column": "target",
+        "train_medians": {},
+        "metrics": {},
+        "model_name": "gradient_boosting_risk_model",
+        "version": "legacy",
+        "algorithm_name": artifact.__class__.__name__,
+    }
 
 
 def snapshot_to_features(snapshot: RiskFeatureSnapshot) -> pd.DataFrame:
@@ -162,6 +190,11 @@ def predict_risk(snapshot: RiskFeatureSnapshot) -> tuple[Decimal, RiskLevel, dic
 
     features = snapshot_to_features(snapshot)
     features = features[feature_columns]
+
+    train_medians = artifact.get("train_medians") or {}
+
+    if train_medians:
+        features = features.fillna(train_medians)
 
     model_probability = Decimal(str(round(float(model.predict_proba(features)[0][1]), 5)))
     domain_score = calculate_domain_score(snapshot)

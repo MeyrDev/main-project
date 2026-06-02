@@ -33,12 +33,16 @@ train:
 	docker compose run --rm --no-deps app python -m app.ml.train_model
 
 prepare-datasets:
-	python -m app.ml.prepare_datasets_from_csv
+	docker compose run --rm --no-deps app python -m app.ml.prepare_datasets_from_csv
+
+train-report:
+	@echo artifacts/training_report.md
 
 init:
 	docker compose up -d --build
 	docker compose run --rm app alembic upgrade head
 	docker compose run --rm app python -m app.scripts.seed
+	docker compose run --rm --no-deps app python -m app.ml.prepare_datasets_from_csv
 	docker compose run --rm --no-deps app python -m app.ml.train_model
 
 ps:

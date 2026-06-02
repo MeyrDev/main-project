@@ -1,0 +1,73 @@
+{
+  "project_name": "risk-crm-starter",
+  "model_name": "gradient_boosting_risk_model",
+  "model_version": "1.2.0",
+  "algorithm": "GradientBoostingClassifier + IsotonicCalibration",
+  "algorithm_name": "GradientBoostingClassifier + IsotonicCalibration",
+  "trained_at": "2026-06-02T06:15:35.914063+00:00",
+  "train_dataset_path": "data/train_dataset.csv",
+  "validation_dataset_path": "data/validation_dataset.csv",
+  "train_rows": 500,
+  "validation_rows": 300,
+  "feature_columns": [
+    "log_revenue",
+    "log_debt_amount",
+    "debt_ratio",
+    "overdue_days_30",
+    "overdue_days_90",
+    "disputes_count",
+    "transactions_count",
+    "employees_count",
+    "low_transactions_flag"
+  ],
+  "target_column": "target",
+  "train_target_distribution": {
+    "0": 389,
+    "1": 111
+  },
+  "validation_target_distribution": {
+    "0": 233,
+    "1": 67
+  },
+  "train_medians": {
+    "log_revenue": 0.02352732642270795,
+    "log_debt_amount": 0.00259977216256105,
+    "debt_ratio": 0.1426519938325725,
+    "overdue_days_30": 1.0,
+    "overdue_days_90": 57.0,
+    "disputes_count": 0.0,
+    "transactions_count": 173.0,
+    "employees_count": 48.0,
+    "low_transactions_flag": 0.0
+  },
+  "classification_threshold": 0.402299,
+  "train_threshold_f1": 0.9209,
+  "metrics": {
+    "roc_auc": 0.7371,
+    "pr_auc": 0.4045,
+    "f1": 0.3871,
+    "precision": 0.4211,
+    "recall": 0.3582,
+    "accuracy": 0.7467,
+    "brier_score": 0.1556
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        200,
+        33
+      ],
+      [
+        43,
+        24
+      ]
+    ]
+  },
+  "artifact_path": "artifacts/risk_model.joblib",
+  "validation_predictions_path": "artifacts/validation_predictions.csv",
+  "notes": "Model was trained only on train_dataset.csv. Validation metrics were calculated only on validation_dataset.csv. Missing values in validation were filled with medians calculated from train dataset. The binary classification threshold was selected on train dataset."
+}
