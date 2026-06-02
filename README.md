@@ -203,19 +203,6 @@ ports:
 Port: 5432
 ```
 
-Путь в DBeaver:
-
-```text
-Database → New Database Connection → PostgreSQL
-```
-
-После подключения открыть:
-
-```text
-risk_crm → Schemas → public → Tables
-```
-
----
 
 ## 7. Полный запуск с нуля
 
@@ -439,70 +426,6 @@ docker compose up -d --build
 image: postgres:16-alpine
 ```
 
----
-
-## 15. Структура проекта
-
-```text
-risk-crm-starter/
-├── app/
-│   ├── core/
-│   │   └── config.py
-│   ├── db/
-│   │   ├── base.py
-│   │   └── session.py
-│   ├── models/
-│   │   ├── audit_log.py
-│   │   ├── data_import_batch.py
-│   │   ├── deal.py
-│   │   ├── external_data_source.py
-│   │   ├── feature_snapshot.py
-│   │   ├── interaction.py
-│   │   ├── ml_model.py
-│   │   ├── organization.py
-│   │   ├── organization_contact.py
-│   │   ├── report.py
-│   │   ├── risk_prediction.py
-│   │   ├── role.py
-│   │   ├── user.py
-│   │   └── __init__.py
-│   ├── scripts/
-│   │   ├── seed.py
-│   │   └── __init__.py
-│   └── main.py
-├── alembic/
-│   ├── versions/
-│   ├── env.py
-│   └── script.py.mako
-├── alembic.ini
-├── docker-compose.yml
-├── Dockerfile
-├── pyproject.toml
-├── .env.example
-└── README.md
-```
-
----
-
-## 16. Следующий этап разработки
-
-После настройки базы данных следующий этап — разработка минимального backend API:
-
-```text
-GET /api/organizations
-GET /api/organizations/{id}
-GET /api/organizations/{id}/risk
-GET /api/risk-predictions
-GET /api/dashboard/summary
-```
-
-Затем будет добавлен ML-модуль:
-
-```text
-POST /api/ml/predict/{organization_id}
-```
-
-Он будет брать признаки из `risk_feature_snapshots`, загружать модель из `ml_models` и сохранять результат в `risk_predictions`.
 
 user: admin@risk-crm.local
 pass: admin123
