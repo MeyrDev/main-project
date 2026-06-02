@@ -503,3 +503,6 @@ POST /api/ml/predict/{organization_id}
 ```
 
 Он будет брать признаки из `risk_feature_snapshots`, загружать модель из `ml_models` и сохранять результат в `risk_predictions`.
+
+user: admin@risk-crm.local
+pass: admin123

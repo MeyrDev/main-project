@@ -12,8 +12,10 @@ from app.api.routes.deals import router as deals_router
 from app.api.routes.interactions import router as interactions_router
 from app.api.routes.reports import router as reports_router
 from app.api.routes.audit_logs import router as audit_logs_router
+from app.api.routes.auth import router as auth_router
 
 __all__ = [
+    "auth_router",
     "dashboard_router",
     "ml_router",
     "organizations_router",

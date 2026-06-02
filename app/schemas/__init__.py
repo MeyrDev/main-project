@@ -23,6 +23,7 @@ from app.schemas.deal import DealCreate, DealItem, DealUpdate
 from app.schemas.interaction import InteractionCreate, InteractionItem, InteractionUpdate
 from app.schemas.report import ReportCreate, ReportData, ReportItem
 from app.schemas.audit_log import AuditLogItem
+from app.schemas.auth import CurrentUserResponse
 from app.schemas.dashboard import (
     DashboardHighRiskOrganization,
     DashboardRecentAuditLog,
@@ -54,6 +55,7 @@ __all__ = [
     "ReportItem",
     "ReportData",
     "AuditLogItem",
+    "CurrentUserResponse",
     "DashboardHighRiskOrganization",
     "DashboardRecentAuditLog",
     "DashboardRecentPrediction",

@@ -1,11 +1,3 @@
-"""
-Pydantic-схемы для dashboard.
-
-Dashboard отображает сводную аналитику CRM-системы:
-количество организаций, сделок, прогнозов, распределение рисков,
-топ организаций с высоким риском и последние действия пользователей.
-"""
-
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID

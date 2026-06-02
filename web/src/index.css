@@ -30,9 +30,45 @@ button {
   color: white;
 }
 
-.sidebar h2 {
-  margin-top: 0;
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 24px;
+}
+
+.brand img {
+  width: 56px;
+  height: 56px;
+}
+
+.sidebar h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sidebar-user {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #1f2937;
+}
+
+.sidebar-user span,
+.sidebar-user strong {
+  display: block;
+}
+
+.sidebar-user span {
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.sidebar-user strong {
+  color: #93c5fd;
+  font-size: 12px;
+  text-transform: uppercase;
 }
 
 .sidebar button {
@@ -48,6 +84,17 @@ button {
 
 .sidebar button.active {
   background: #2563eb;
+}
+
+.sidebar button.logout-button {
+  margin-top: 16px;
+  background: #374151;
+}
+
+.auth-loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
 }
 
 .content {

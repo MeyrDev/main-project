@@ -2,6 +2,7 @@ from app.models import (
     Role,
     User,
 )
+from app.core.security import get_password_hash
 
 def seed_roles(db):
     roles_data = [
@@ -53,6 +54,7 @@ def seed_users(db, roles):
             "email": "admin@risk-crm.local",
             "full_name": "Администратор системы",
             "role": roles["admin"],
+            "password": "admin123",
         },
         {
             "email": "manager@risk-crm.local",
@@ -81,11 +83,15 @@ def seed_users(db, roles):
                 email=item["email"],
                 full_name=item["full_name"],
                 role_id=item["role"].id,
-                password_hash=None,
+                password_hash=get_password_hash(item["password"])
+                if item.get("password")
+                else None,
                 is_active=True,
             )
             db.add(user)
             db.flush()
+        elif item.get("password") and not user.password_hash:
+            user.password_hash = get_password_hash(item["password"])
 
         users[item["email"]] = user
 

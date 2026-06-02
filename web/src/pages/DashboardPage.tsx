@@ -18,12 +18,12 @@ export function DashboardPage() {
   }
 
   if (!data) {
-    return <div>Загрузка dashboard...</div>;
+    return <div>Загрузка главной страницы...</div>;
   }
 
   return (
     <div className="page">
-      <h1>Dashboard</h1>
+      <h1>Главная</h1>
 
       <div className="cards">
         <div className="card">
