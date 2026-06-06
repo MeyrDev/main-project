@@ -33,3 +33,134 @@
   color: #f9fafb;
   font-size: 14px;
 }
+
+.ml-proof-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ml-proof-header p {
+  max-width: 760px;
+  margin: 6px 0 0;
+  color: #4b5563;
+}
+
+.ml-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.ml-info-card small {
+  display: block;
+  margin-top: 8px;
+  color: #6b7280;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.ml-info-card p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.ml-datasets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.ml-distribution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ml-distribution small,
+.ml-feature-list code {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.ml-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.ml-metric {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.ml-metric small {
+  margin-top: 0;
+}
+
+.ml-confusion {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(72px, 1fr));
+  gap: 10px;
+}
+
+.ml-confusion div {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.ml-confusion small {
+  margin-top: 0;
+}
+
+.ml-feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 980px) {
+  .ml-info-grid,
+  .ml-proof-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+
+  .ml-info-card.wide {
+    grid-column: span 2;
+  }
+
+  .ml-metric-grid {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .ml-proof-header,
+  .ml-datasets {
+    grid-template-columns: 1fr;
+  }
+
+  .ml-proof-header {
+    display: grid;
+  }
+
+  .ml-info-grid,
+  .ml-proof-grid,
+  .ml-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ml-info-card.wide {
+    grid-column: auto;
+  }
+}

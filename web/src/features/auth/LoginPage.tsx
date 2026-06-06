@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { getCurrentUser } from "./api";
 import { clearAuthCredentials, setAuthCredentials } from "./authStorage";
 import type { CurrentUser } from "./types";

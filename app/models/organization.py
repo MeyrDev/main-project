@@ -1,8 +1,7 @@
 """
 Модель хозяйствующего субъекта.
 
-Организация представляет компанию или экономический субъект,
-для которого система хранит CRM-данные и рассчитывает уровень риска.
+Организация представляет компанию для которого система хранит CRM-данные и рассчитывает уровень риска.
 """
 from datetime import datetime
 from decimal import Decimal
@@ -13,7 +12,6 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-
 
 class Organization(Base):
     __tablename__ = "organizations"

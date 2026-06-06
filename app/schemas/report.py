@@ -1,17 +1,7 @@
-"""
-Pydantic-схемы для отчётов.
-
-Отчёты используются для фиксации сформированных аналитических материалов:
-карточка организации, сводка риска, портфельная аналитика и качество ML-модели.
-"""
-
 from datetime import datetime
 from uuid import UUID
-
 from pydantic import BaseModel, ConfigDict, Field
-
 from app.models.report import ReportStatus, ReportType
-
 
 class ReportCreate(BaseModel):
     organization_id: UUID | None = Field(

@@ -18,7 +18,7 @@ from app.schemas.risk_prediction import (
 )
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.feature_snapshot import RiskFeatureSnapshotCreate, RiskFeatureSnapshotItem
-from app.schemas.ml import MLModelInfo
+from app.schemas.ml import MLModelInfo, MLTrainingReport, MLValidationEvaluation
 from app.schemas.deal import DealCreate, DealItem, DealUpdate
 from app.schemas.interaction import InteractionCreate, InteractionItem, InteractionUpdate
 from app.schemas.report import ReportCreate, ReportData, ReportItem
@@ -43,6 +43,8 @@ __all__ = [
     "RiskFeatureSnapshotCreate",
     "RiskFeatureSnapshotItem",
     "MLModelInfo",
+    "MLTrainingReport",
+    "MLValidationEvaluation",
     "OrganizationRiskHistoryItem",
     "OrganizationUpdate",
     "DealCreate",

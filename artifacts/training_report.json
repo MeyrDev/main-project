@@ -4,7 +4,7 @@
   "model_version": "1.2.0",
   "algorithm": "GradientBoostingClassifier + IsotonicCalibration",
   "algorithm_name": "GradientBoostingClassifier + IsotonicCalibration",
-  "trained_at": "2026-06-02T06:15:35.914063+00:00",
+  "trained_at": "2026-06-05T09:20:11.919733+00:00",
   "train_dataset_path": "data/train_dataset.csv",
   "validation_dataset_path": "data/validation_dataset.csv",
   "train_rows": 500,

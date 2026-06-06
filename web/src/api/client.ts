@@ -12,6 +12,10 @@ import type {
 import type { DealCreate, DealItem, DealUpdate } from "../types/deals";
 import { clearAuthCredentials } from "../features/auth/authStorage";
 import { getAuthHeaders } from "../features/auth/api";
+import type {
+  MLTrainingReport,
+  MLValidationEvaluation,
+} from "../features/ml/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
@@ -111,6 +115,16 @@ export function predictRiskBySnapshot(
   snapshotId: string
 ): Promise<RiskPredictionItem> {
   return request<RiskPredictionItem>(`/api/ml/predict-snapshot/${snapshotId}`, {
+    method: "POST",
+  });
+}
+
+export function getTrainingReport(): Promise<MLTrainingReport> {
+  return request<MLTrainingReport>("/api/ml/training-report");
+}
+
+export function evaluateValidationDataset(): Promise<MLValidationEvaluation> {
+  return request<MLValidationEvaluation>("/api/ml/evaluate-validation", {
     method: "POST",
   });
 }

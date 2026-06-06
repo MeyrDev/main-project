@@ -429,3 +429,42 @@ image: postgres:16-alpine
 
 user: admin@risk-crm.local
 pass: admin123
+
+---
+
+## Как показать комиссии обучение модели
+
+1. Подготовить датасеты:
+
+```bash
+make prepare-datasets
+```
+
+2. Обучить модель:
+
+```bash
+make train
+```
+
+3. Запустить приложение:
+
+```bash
+docker compose up -d --build
+```
+
+4. Открыть в интерфейсе раздел `ML-модель`.
+
+5. Показать комиссии:
+
+- обучающий датасет `data/train_dataset.csv`;
+- validation датасет `data/validation_dataset.csv`;
+- метрики качества на validation dataset;
+- матрицу ошибок;
+- сохраненный artifact `artifacts/risk_model.joblib`;
+- список признаков модели;
+- кнопку `Проверить модель на validation_dataset`, которая повторно проверяет сохраненную модель без переобучения.
+
+Backend endpoints для проверки:
+
+- `GET /api/ml/training-report` возвращает отчет обучения и metadata artifact;
+- `POST /api/ml/evaluate-validation` загружает сохраненный artifact, применяет его к `validation_dataset.csv`, пересчитывает метрики и сохраняет `artifacts/latest_validation_evaluation.json`.
