@@ -41,8 +41,8 @@ export function LoginPage({ onLogin }: Props) {
   return (
     <main className="login-page">
       <form className="login-panel" onSubmit={handleSubmit}>
-        <img src="/favicon.svg" alt="EntityRIsk Analytics logo" />
-        <h1>EntityRIsk Analytics</h1>
+        <img src="/favicon.svg" alt="EntityRisk Analytics logo" />
+        <h1>EntityRisk Analytics</h1>
 
         <label>
           Email

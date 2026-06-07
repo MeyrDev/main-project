@@ -78,8 +78,8 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <img src="/favicon.svg" alt="EntityRIsk Analytics logo" />
-          <h2>EntityRIsk Analytics</h2>
+          <img src="/favicon.svg" alt="EntityRisk Analytics logo" />
+          <h2>EntityRisk Analytics</h2>
         </div>
 
         <div className="sidebar-user">
