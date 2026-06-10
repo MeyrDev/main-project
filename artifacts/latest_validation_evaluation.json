@@ -1,0 +1,49 @@
+{
+  "evaluated": true,
+  "evaluated_at": "2026-06-08T04:55:18.370182+00:00",
+  "validation_dataset_path": "data/validation_dataset.csv",
+  "validation_rows": 300,
+  "feature_columns": [
+    "log_revenue",
+    "log_debt_amount",
+    "debt_ratio",
+    "overdue_days_30",
+    "overdue_days_90",
+    "disputes_count",
+    "transactions_count",
+    "employees_count",
+    "low_transactions_flag"
+  ],
+  "target_column": "target",
+  "metrics": {
+    "roc_auc": 0.7363,
+    "pr_auc": 0.4088,
+    "f1": 0.406,
+    "precision": 0.4091,
+    "recall": 0.403,
+    "accuracy": 0.7367,
+    "brier_score": 0.1553
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        194,
+        39
+      ],
+      [
+        40,
+        27
+      ]
+    ]
+  },
+  "artifact_path": "artifacts/risk_model.joblib",
+  "evaluation_path": "artifacts/latest_validation_evaluation.json",
+  "notes": "Validation evaluation loads the saved model artifact and applies it to validation_dataset.csv without retraining.",
+  "artifact_exists": true,
+  "artifact_size_bytes": 715640,
+  "artifact_modified_at": "2026-06-08T04:27:38.977849+00:00"
+}

@@ -122,12 +122,7 @@ export function MLModelPage() {
         <section className="section">
           <div className="ml-proof-header">
             <div>
-              <h2>Результаты обучения и проверки модели</h2>
-              <p>
-                Проверка выполняется без повторного обучения: приложение
-                загружает сохраненный artifact модели и применяет его к
-                validation_dataset.csv.
-              </p>
+              <h2>Результаты обучения</h2>
             </div>
 
             <button
@@ -245,16 +240,6 @@ export function MLModelPage() {
                 ))}
               </div>
             </div>
-
-            <div className="ml-info-card wide">
-              <span>Вывод для комиссии</span>
-              <p>
-                Модель обучена на <code>train_dataset.csv</code> и проверена на
-                отдельном <code>validation_dataset.csv</code>. Сохраненный
-                артефакт <code>risk_model.joblib</code> используется
-                backend-модулем для расчета риска организаций.
-              </p>
-            </div>
           </div>
         </section>
       )}
@@ -293,28 +278,7 @@ export function MLModelPage() {
             <h2>Используемые признаки</h2>
 
             <MLFeaturesTable featureColumns={model.feature_columns} />
-          </section>
-
-          <section className="section">
-            <h2>Назначение ML-модуля</h2>
-
-            <p>
-              ML-модуль использует финансово-операционные признаки организации
-              из таблицы <strong>Снимки признаков риска</strong> и рассчитывает
-              вероятность риска. Результат сохраняется в таблицу{" "}
-              <strong>Результаты прогнозирования риска</strong>.
-            </p>
-
-            <pre className="ml-flow">
-              {`Снимки признаков риска
-        ->
-ML-модель
-        ->
-Оценка риска / уровень риска
-        ->
-Результаты прогнозирования риска`}
-            </pre>
-          </section>
+          </section> 
         </>
       )}
     </div>

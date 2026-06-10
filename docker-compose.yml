@@ -45,6 +45,7 @@ services:
     ports:
       - "5173:5173"
     environment:
+    # VITE_API_BASE_URL: https://aues-master.onrender.com
       VITE_API_BASE_URL: http://localhost:8000
     command: npm run dev -- --host 0.0.0.0
 
